@@ -57,6 +57,7 @@
     git
     htop
     neofetch
+    i2c-tools
   ];
 
   # allows the use of flakes
