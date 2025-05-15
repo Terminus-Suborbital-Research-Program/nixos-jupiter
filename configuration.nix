@@ -3,7 +3,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    "${builtins.fetchGit { url = "https://github.com/NixOS/nixos-hardware.git"; }}/raspberry-pi/4"
+    <nixos-hardware/raspberry-pi/4>
 ];
 
   system.stateVersion = "24.11"; # Pinned, DON"T CHANGE
