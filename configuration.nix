@@ -21,6 +21,8 @@
 
   # Set udev rules for GPIO access
   services.udev.extraRules = ''
+  SUBSYSTEM=="bcm2835-gpiomem", KERNEL=="gpiomem", GROUP="gpio", MODE="0660"
+  SUBSYSTEM=="gpio", KERNEL=="gpiochip[0-9]*", GROUP="gpio", MODE="0660"
   '';
 
   # the user account on the machine
