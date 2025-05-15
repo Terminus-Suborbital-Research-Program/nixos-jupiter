@@ -1,9 +1,14 @@
 { pkgs, ... }:
 
 {
-  imports = [ ./hardware-configuration.nix ];
+  imports = [
+    ./hardware-configuration.nix
+    "${builtins.fetchGit { url = "https://github.com/NixOS/nixos-hardware.git"; }}/raspberry-pi/4"
+];
 
   system.stateVersion = "24.11"; # Pinned, DON"T CHANGE
+
+  hardware.raspberry-pi."4".i2c1.enable = true;
 
   # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
   boot.loader.grub.enable = false;
@@ -28,6 +33,7 @@
     extraGroups = [ 
         "wheel"
         "gpio"
+        "i2c"
     ];
     hashedPassword =
       "$6$/y/JpKnBdDNKy4TT$AwhlCR6pIDBvvzdk8ZIKQFUQ/qp4o5lGJJq3kLQtnFHfuW6eJbbz7Pd/MxDOV8Ie0/0moYgCxTln0a9UA0Edz.";
