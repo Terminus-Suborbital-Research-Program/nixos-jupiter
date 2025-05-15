@@ -10,6 +10,8 @@
   # Enables the generation of /boot/extlinux/extlinux.conf
   boot.loader.generic-extlinux-compatible.enable = true;
 
+  nixpkgs.config.allowUnfree = true;
+
   # the user account on the machine
   users.users.terminus = {
     isNormalUser = true;
@@ -26,13 +28,29 @@
   services.zerotierone = {
     enable = true;
     joinNetworks = [ "8056c2e21cb25d85" ];
-  }
+  };
+
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+    publish = {
+      enable = true;
+      userServices = true;
+      addresses = true;
+    };
+  };
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
-  # I use neovim as my text editor, replace with whatever you like
-  environment.systemPackages = with pkgs; [ neovim wget ];
+  environment.systemPackages = with pkgs; [
+    neovim
+    wget
+    git
+    htop
+    neofetch
+  ];
 
   # allows the use of flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -41,5 +59,5 @@
   # a different host. not used in this tutorial, but handy later.
   nix.settings.trusted-users = [ "terminus" ];
 
-  environment.variables = { EDITOR = "neovim"; };
+  environment.variables = { EDITOR = "nvim"; };
 }
