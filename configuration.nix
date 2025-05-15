@@ -70,10 +70,12 @@
 
   environment.systemPackages = with pkgs; [
     neovim
+    ffmpeg
     libgpiod
     wget
     git
     htop
+    v4l-utils
     neofetch
     i2c-tools
   ];
