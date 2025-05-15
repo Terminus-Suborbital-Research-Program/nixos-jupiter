@@ -8,10 +8,11 @@
 		nixos-hardware.url = "github:NixOs/nixos-hardware/master";
 	};
 
-	outputs = { self, nixpkgs, ... }@inputs: rec {
+	outputs = { self, nixpkgs, nixos-hardware, ... }@inputs: rec {
 		nixosConfigurations."jupiter" = nixpkgs.lib.nixosSystem {
 			system = "aarch64-linux";
 			modules = [
+                nixos-hardware.nixosModules.raspberrypi4
 				./configuration.nix
 			];
 		};
