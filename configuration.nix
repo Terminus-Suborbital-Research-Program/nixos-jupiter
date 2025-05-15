@@ -25,7 +25,7 @@
     ];
   };
 
-  networking.hostname = "jupiter";
+  networking.hostName = "jupiter";
 
   networking.wireless = {
     enable = true;
