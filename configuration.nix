@@ -18,11 +18,18 @@
     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
     hashedPassword =
       "$6$/y/JpKnBdDNKy4TT$AwhlCR6pIDBvvzdk8ZIKQFUQ/qp4o5lGJJq3kLQtnFHfuW6eJbbz7Pd/MxDOV8Ie0/0moYgCxTln0a9UA0Edz.";
+
+    openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL/QIvKf8yNyDwfBHuyoL9lrhnewB9FO+33SnxyoD+AJ lucas@nixos"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFXPxcaJrD7Lu2P1/CxCwoKySNrszKuXgJteVZFo9vk3 supergoodname77@cachyos-x8664"
+    ];
   };
+
+  networking.hostname = "jupiter";
 
   networking.wireless = {
     enable = true;
-    networks."Staff5".psk = "Where is the coffee?";
+    networks."Staff5".pskRaw = "66fe08674eda745336a1ac1dddf2e7fef7d1374a6c73184194a05332e0648ff1";
   };
 
   services.zerotierone = {
