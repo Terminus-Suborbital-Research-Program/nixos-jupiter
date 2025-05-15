@@ -23,6 +23,11 @@
     networks."Staff5".psk = "Where is the coffee?";
   };
 
+  services.zerotierone = {
+    enable = true;
+    joinNetworks = [ "8056c2e21cb25d85" ];
+  }
+
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
