@@ -2,7 +2,6 @@
 
 {
   imports = [
-    ./hardware-configuration.nix
 ];
 
   system.stateVersion = "24.11"; # Pinned, DON"T CHANGE
