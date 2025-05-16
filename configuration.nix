@@ -76,7 +76,7 @@
     neovim
     ffmpeg
     direnv
-    wiringpi
+    libgpiod
     wget
     kitty
     git
