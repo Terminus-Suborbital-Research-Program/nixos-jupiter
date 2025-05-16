@@ -38,6 +38,7 @@
     isNormalUser = true;
     extraGroups = [ 
         "wheel"
+        "dialout"
         "gpio"
         "i2c"
         "uart"
