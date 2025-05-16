@@ -1,16 +1,12 @@
 { config, pkgs, ... }:
 
 {
-  imports = [
-];
+  imports = [ ];
 
   system.stateVersion = "24.11"; # Pinned, DON"T CHANGE
 
-  boot.kernelParams = [
-    "console=tty1"
-    "8250.nr_uarts=1"
-    "console=serial0,115200n8"
-  ];
+  boot.kernelParams =
+    [ "console=tty1" "8250.nr_uarts=1" "console=serial0,115200n8" ];
 
   # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
   boot.loader.grub.enable = false;
@@ -20,28 +16,24 @@
   nixpkgs.config.allowUnfree = true;
 
   # Group for GPIO access
-  users.groups.gpio = {};
+  users.groups.gpio = { };
 
   # Set udev rules for GPIO access
   services.udev.extraRules = ''
-  SUBSYSTEM=="bcm2835-gpiomem", KERNEL=="gpiomem", GROUP="gpio", MODE="0660"
-  SUBSYSTEM=="gpio", KERNEL=="gpiochip[0-9]*", GROUP="gpio", MODE="0660"
+    SUBSYSTEM=="bcm2835-gpiomem", KERNEL=="gpiomem", GROUP="gpio", MODE="0660"
+    SUBSYSTEM=="gpio", KERNEL=="gpiochip[0-9]*", GROUP="gpio", MODE="0660"
   '';
 
   # the user account on the machine
   users.users.terminus = {
     isNormalUser = true;
-    extraGroups = [ 
-        "wheel"
-        "gpio"
-        "i2c"
-    ];
+    extraGroups = [ "wheel" "gpio" "i2c" ];
     hashedPassword =
       "$6$/y/JpKnBdDNKy4TT$AwhlCR6pIDBvvzdk8ZIKQFUQ/qp4o5lGJJq3kLQtnFHfuW6eJbbz7Pd/MxDOV8Ie0/0moYgCxTln0a9UA0Edz.";
 
     openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL/QIvKf8yNyDwfBHuyoL9lrhnewB9FO+33SnxyoD+AJ lucas@nixos"
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFXPxcaJrD7Lu2P1/CxCwoKySNrszKuXgJteVZFo9vk3 supergoodname77@cachyos-x8664"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL/QIvKf8yNyDwfBHuyoL9lrhnewB9FO+33SnxyoD+AJ lucas@nixos"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFXPxcaJrD7Lu2P1/CxCwoKySNrszKuXgJteVZFo9vk3 supergoodname77@cachyos-x8664"
     ];
   };
 
@@ -49,7 +41,8 @@
 
   networking.wireless = {
     enable = true;
-    networks."Staff5".pskRaw = "66fe08674eda745336a1ac1dddf2e7fef7d1374a6c73184194a05332e0648ff1";
+    networks."Staff5".pskRaw =
+      "66fe08674eda745336a1ac1dddf2e7fef7d1374a6c73184194a05332e0648ff1";
   };
 
   services.zerotierone = {
