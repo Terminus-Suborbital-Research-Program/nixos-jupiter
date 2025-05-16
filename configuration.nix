@@ -7,13 +7,11 @@
 
   system.stateVersion = "24.11"; # Pinned, DON"T CHANGE
 
-  boot.kernelParams = [ "console=tty1" ];
-
-  systemd.services."serial-getty@ttyAMA0".enable = false;
-  systemd.services."serial-getty@ttyS0".enable   = false;
-
-  hardware.raspberry-pi."4".i2c1.enable = true;
-  hardware.rasbperry-pi."4".bluetooth.enable = false;
+  boot.kernelParams = [
+    "console=tty1"
+    "8250.nr_uarts=1"
+    "console=serial0,115200n8"
+  ];
 
   # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
   boot.loader.grub.enable = false;
