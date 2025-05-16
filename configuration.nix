@@ -76,7 +76,9 @@
     neovim
     ffmpeg
     libgpiod
+    direnv
     wget
+    kitty
     git
     htop
     v4l-utils
