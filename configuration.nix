@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   imports = [
@@ -7,18 +7,33 @@
 
   system.stateVersion = "24.11"; # Pinned, DON"T CHANGE
 
-  boot.kernelParams = [ "console=tty1" ];
-
-  systemd.services."serial-getty@ttyAMA0".enable = false;
-  systemd.services."serial-getty@ttyS0".enable   = false;
-
   hardware.raspberry-pi."4".i2c1.enable = true;
-  hardware.rasbperry-pi."4".bluetooth.enable = false;
 
-  # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
-  boot.loader.grub.enable = false;
-  # Enables the generation of /boot/extlinux/extlinux.conf
-  boot.loader.generic-extlinux-compatible.enable = true;
+  boot = {
+		# The Linux kernel version
+		kernelPackages = pkgs.linuxPackages_rpi4;
+		# Options to enable serial console and more
+		kernelParams = [
+			"8250.nr_uarts=1"
+			"console=tyAMA0,115200"
+			"console=tty1"
+			"cma=128M"
+		];
+
+		# The bootloader
+		loader = {
+			raspberryPi = {
+				enable = true;
+				version = 4;
+			};
+
+			# Use extlinux, whereas the NixOS default is Grub
+			grub.enable = false;
+
+			# Enables the generation of /boot/extlinux/extlinux.conf
+			generic-extlinux-compatible.enable = true;
+		};
+	};
 
   nixpkgs.config.allowUnfree = true;
 
@@ -75,6 +90,7 @@
   services.openssh.enable = true;
 
   environment.systemPackages = with pkgs; [
+    libraspberrypi
     neovim
     ffmpeg
     libgpiod
