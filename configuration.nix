@@ -75,8 +75,8 @@
     libraspberrypi
     neovim
     ffmpeg
-    libgpiod
     direnv
+    wiringpi
     wget
     kitty
     git
