@@ -8,7 +8,9 @@
 
   boot.initrd.availableKernelModules = [ "xhci_pci" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "sun4i-drm" ];
+  boot.kernelModules = [
+    "sun4i-drm"
+  ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" = {

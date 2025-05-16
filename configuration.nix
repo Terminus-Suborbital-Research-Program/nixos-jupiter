@@ -1,12 +1,19 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ];
+  imports = [
+        ./hardware-configuration.nix
+  ];
 
   system.stateVersion = "24.11"; # Pinned, DON"T CHANGE
 
-  boot.kernelParams =
-    [ "console=tty1" "8250.nr_uarts=1" "console=serial0,115200n8" ];
+  boot.kernelParams = [
+    "console=tty1"
+    "8250.nr_uarts=1"
+    "console=serial0,115200n8"
+  ];
+
+  boot.kernelPackages = pkgs.linuxPackages_rpi4; 
 
   # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
   boot.loader.grub.enable = false;
@@ -16,7 +23,9 @@
   nixpkgs.config.allowUnfree = true;
 
   # Group for GPIO access
-  users.groups.gpio = { };
+  users.groups.gpio = {};
+  users.groups.uart = {};
+
 
   # Set udev rules for GPIO access
   services.udev.extraRules = ''
@@ -27,7 +36,13 @@
   # the user account on the machine
   users.users.terminus = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "gpio" "i2c" ];
+    extraGroups = [ 
+        "wheel"
+        "dialout"
+        "gpio"
+        "i2c"
+        "uart"
+    ];
     hashedPassword =
       "$6$/y/JpKnBdDNKy4TT$AwhlCR6pIDBvvzdk8ZIKQFUQ/qp4o5lGJJq3kLQtnFHfuW6eJbbz7Pd/MxDOV8Ie0/0moYgCxTln0a9UA0Edz.";
 
@@ -65,6 +80,9 @@
   services.openssh.enable = true;
 
   environment.systemPackages = with pkgs; [
+    htop
+    picocom
+    aravis
     libraspberrypi
     neovim
     ffmpeg
