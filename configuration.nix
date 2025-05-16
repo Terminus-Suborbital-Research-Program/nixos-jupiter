@@ -73,6 +73,9 @@
   services.openssh.enable = true;
 
   environment.systemPackages = with pkgs; [
+    htop
+    picocom
+    aravis
     libraspberrypi
     neovim
     ffmpeg
