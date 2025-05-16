@@ -22,6 +22,11 @@
 
   nixpkgs.config.allowUnfree = true;
 
+  hardware.deviceTree.enable = true;
+  hardware.i2c.enable=true;
+
+  hardware.raspberry-pi."4".i2c1.enable = true;
+
   # Group for GPIO access
   users.groups.gpio = {};
   users.groups.uart = {};
@@ -82,6 +87,7 @@
 
   environment.systemPackages = with pkgs; [
     htop
+    lsof
     picocom
     aravis
     libraspberrypi
