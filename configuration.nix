@@ -66,6 +66,11 @@
       "66fe08674eda745336a1ac1dddf2e7fef7d1374a6c73184194a05332e0648ff1";
   };
 
+  boot.postBootCommands = ''
+    gpioset 'GPIO12=active' & sleep 1 && pkill gpioset
+  '';
+
+
   services.zerotierone = {
     enable = true;
     joinNetworks = [ "8056c2e21cb25d85" ];
@@ -87,6 +92,7 @@
 
   environment.systemPackages = with pkgs; [
     htop
+    usbutils
     lsof
     picocom
     aravis
