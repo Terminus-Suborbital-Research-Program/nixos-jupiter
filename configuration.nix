@@ -9,8 +9,9 @@
 
   boot.kernelParams = [
     "console=tty1"
-    "8250.nr_uarts=1"
+    "8250.nr_uarts=4"
     "console=serial0,115200n8"
+    "dtoverlay=uart2"
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_rpi4; 
@@ -22,15 +23,24 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  hardware.deviceTree.enable = true;
+  hardware.deviceTree = {
+    enable = true;
+    overlays = [
+      {
+        name = "uart1-overlay";
+        dtsText = builtins.readFile ./uart1-overlay.dts ;
+      }
+    ];
+  };
   hardware.i2c.enable=true;
 
-  hardware.raspberry-pi."4".i2c1.enable = true;
+  hardware.raspberry-pi."4" = {
+    i2c1.enable = true;
+    bluetooth.enable = false;
+  };
 
   # Group for GPIO access
   users.groups.gpio = {};
-  users.groups.uart = {};
-
 
   # Set udev rules for GPIO access
   services.udev.extraRules = ''
@@ -70,7 +80,6 @@
     gpioset 'GPIO12=active' & sleep 1 && pkill gpioset
   '';
 
-
   services.zerotierone = {
     enable = true;
     joinNetworks = [ "8056c2e21cb25d85" ];
@@ -94,6 +103,8 @@
     htop
     usbutils
     lsof
+    lazygit 
+    dtc
     picocom
     aravis
     libraspberrypi
