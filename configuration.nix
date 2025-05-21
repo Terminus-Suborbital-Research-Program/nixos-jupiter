@@ -1,9 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  imports = [
-        ./hardware-configuration.nix
-  ];
+  imports = [ ./hardware-configuration.nix ];
 
   system.stateVersion = "24.11"; # Pinned, DON"T CHANGE
 
@@ -14,7 +12,7 @@
     "dtoverlay=uart2"
   ];
 
-  boot.kernelPackages = pkgs.linuxPackages_rpi4; 
+  boot.kernelPackages = pkgs.linuxPackages_rpi4;
 
   # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
   boot.loader.grub.enable = false;
@@ -25,14 +23,12 @@
 
   hardware.deviceTree = {
     enable = true;
-    overlays = [
-      {
-        name = "uart1-overlay";
-        dtsText = builtins.readFile ./uart1-overlay.dts ;
-      }
-    ];
+    overlays = [{
+      name = "uart1-overlay";
+      dtsText = builtins.readFile ./uart1-overlay.dts;
+    }];
   };
-  hardware.i2c.enable=true;
+  hardware.i2c.enable = true;
 
   hardware.raspberry-pi."4" = {
     i2c1.enable = true;
@@ -40,7 +36,7 @@
   };
 
   # Group for GPIO access
-  users.groups.gpio = {};
+  users.groups.gpio = { };
 
   # Set udev rules for GPIO access
   services.udev.extraRules = ''
@@ -48,16 +44,27 @@
     SUBSYSTEM=="gpio", KERNEL=="gpiochip[0-9]*", GROUP="gpio", MODE="0660"
   '';
 
+  # Task to pull GPIO low at start
+  systemd.services.gpioDown = {
+    description =
+      "Pull down the GPIO line at startup to avoid unintentional ejections";
+
+    serviceConfig = {
+      Type = "oneshot";
+
+      ExecStart = ''
+        ${pkgs.bash}/bin/bash -c "gpioset 'GPIO12=active' & sleep 2 && pkill gpio"'';
+
+      path = with pkgs; [ bash libgpiod ];
+
+      wantedBy = [ "multi-user.target" ];
+    };
+  };
+
   # the user account on the machine
   users.users.terminus = {
     isNormalUser = true;
-    extraGroups = [ 
-        "wheel"
-        "dialout"
-        "gpio"
-        "i2c"
-        "uart"
-    ];
+    extraGroups = [ "wheel" "dialout" "gpio" "i2c" "uart" ];
     hashedPassword =
       "$6$/y/JpKnBdDNKy4TT$AwhlCR6pIDBvvzdk8ZIKQFUQ/qp4o5lGJJq3kLQtnFHfuW6eJbbz7Pd/MxDOV8Ie0/0moYgCxTln0a9UA0Edz.";
 
@@ -103,7 +110,7 @@
     htop
     usbutils
     lsof
-    lazygit 
+    lazygit
     dtc
     picocom
     aravis
