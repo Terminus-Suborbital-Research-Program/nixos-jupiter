@@ -36,12 +36,16 @@
   };
 
   # Group for GPIO access
-  users.groups.gpio = { };
+  users.groups.gpio = {};
+  users.groups.video = {};
 
   # Set udev rules for GPIO access
   services.udev.extraRules = ''
     SUBSYSTEM=="bcm2835-gpiomem", KERNEL=="gpiomem", GROUP="gpio", MODE="0660"
     SUBSYSTEM=="gpio", KERNEL=="gpiochip[0-9]*", GROUP="gpio", MODE="0660"
+
+    # Allied Vision Alvium 1800 U-501m – raw USB node
+    SUBSYSTEM=="usb", ATTR{idVendor}=="1ab2", ATTR{idProduct}=="0001", MODE="0660", GROUP="video", SYMLINK+="alvium-%k"
   '';
 
   # Task to pull GPIO low at start
@@ -64,7 +68,14 @@
   # the user account on the machine
   users.users.terminus = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "dialout" "gpio" "i2c" "uart" ];
+    extraGroups = [ 
+        "wheel"
+        "dialout"
+        "gpio"
+        "i2c"
+        "uart"
+        "video"
+    ];
     hashedPassword =
       "$6$/y/JpKnBdDNKy4TT$AwhlCR6pIDBvvzdk8ZIKQFUQ/qp4o5lGJJq3kLQtnFHfuW6eJbbz7Pd/MxDOV8Ie0/0moYgCxTln0a9UA0Edz.";
 
