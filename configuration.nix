@@ -36,8 +36,8 @@
   };
 
   # Group for GPIO access
-  users.groups.gpio = {};
-  users.groups.video = {};
+  users.groups.gpio = { };
+  users.groups.video = { };
 
   # Set udev rules for GPIO access
   services.udev.extraRules = ''
@@ -48,34 +48,32 @@
     SUBSYSTEM=="usb", ATTR{idVendor}=="1ab2", ATTR{idProduct}=="0001", MODE="0660", GROUP="video", SYMLINK+="alvium-%k"
   '';
 
-  # Task to pull GPIO low at start
-  systemd.services.gpioDown = {
+  systemd.services.gpioDown = let
+
+    script = pkgs.writeShellScript "gpio-down.sh" ''
+      # assert the line and keep the process in the background
+      gpioset -z GPIO12=active &
+      sleep 2
+      pkill -f gpioset
+    '';
+  in {
     description =
-      "Pull down the GPIO line at startup to avoid unintentional ejections";
+      "Pull GPIO-12 low for two seconds at boot to prevent ejection";
+
+    path = with pkgs; [ libgpiod procps ]; # gpioset & pkill
+    wantedBy = [ "multi-user.target" ];
+    after = [ "basic.target" ];
 
     serviceConfig = {
       Type = "oneshot";
-
-      ExecStart = ''
-        ${pkgs.bash}/bin/bash -c "gpioset 'GPIO12=active' & sleep 2 && pkill gpio"'';
-
-      path = with pkgs; [ bash libgpiod ];
-
-      wantedBy = [ "multi-user.target" ];
+      ExecStart = script; # <- a single, valid ExecStart=
+      RemainAfterExit = true;
     };
   };
 
-  # the user account on the machine
   users.users.terminus = {
     isNormalUser = true;
-    extraGroups = [ 
-        "wheel"
-        "dialout"
-        "gpio"
-        "i2c"
-        "uart"
-        "video"
-    ];
+    extraGroups = [ "wheel" "dialout" "gpio" "i2c" "uart" "video" ];
     hashedPassword =
       "$6$/y/JpKnBdDNKy4TT$AwhlCR6pIDBvvzdk8ZIKQFUQ/qp4o5lGJJq3kLQtnFHfuW6eJbbz7Pd/MxDOV8Ie0/0moYgCxTln0a9UA0Edz.";
 
