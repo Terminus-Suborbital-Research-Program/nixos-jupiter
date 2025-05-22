@@ -52,7 +52,7 @@
 
     script = pkgs.writeShellScript "gpio-down.sh" ''
       # assert the line and keep the process in the background
-      gpioset -z GPIO12=active &
+      gpioset -z GPIO12=inactive &
       sleep 2
       pkill -f gpioset
     '';
@@ -114,6 +114,9 @@
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
+
+  # VSCode patch
+  programs.nix-ld.enable = true;
 
   environment.systemPackages = with pkgs; [
     htop
