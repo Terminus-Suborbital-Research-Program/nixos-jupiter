@@ -19,6 +19,8 @@
 
   networking.hostName = "nuc"; # Define your hostname.
 
+  networking.networkmanager.enable = true;
+
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   #  # Set your time zone.
@@ -30,7 +32,6 @@
     kea
     vim
     vscode
-    networkmanager
     kitty
     git
     neovim

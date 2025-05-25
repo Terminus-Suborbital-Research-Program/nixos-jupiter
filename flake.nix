@@ -26,7 +26,6 @@
         ./nuc-config.nix
         ./modules/programs.nix
         ./modules/user.nix
-        ./modules/wireless.nix
       ];
     };
   };
