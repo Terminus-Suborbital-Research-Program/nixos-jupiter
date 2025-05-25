@@ -15,7 +15,7 @@
     wget
     kitty
     git
-    htop
+    btop
     v4l-utils
     neofetch
     i2c-tools

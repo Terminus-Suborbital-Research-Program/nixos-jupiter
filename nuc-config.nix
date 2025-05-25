@@ -19,6 +19,8 @@
 
   networking.hostName = "nuc"; # Define your hostname.
 
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
   #  # Set your time zone.
   time.timeZone = "US/Chicaco";
 

@@ -1,4 +1,4 @@
-{ config, pkgs, ...} : {
+{ config, pkgs, ... }: {
   networking.wireless = {
     enable = true;
     networks."Staff5".pskRaw =
