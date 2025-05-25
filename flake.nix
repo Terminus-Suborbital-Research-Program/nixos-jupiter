@@ -12,7 +12,13 @@
     nixosConfigurations."jupiter" = nixpkgs.lib.nixosSystem {
       system = "aarch64-linux";
       modules =
-        [ nixos-hardware.nixosModules.raspberry-pi-4 ./configuration.nix ];
+        [
+		nixos-hardware.nixosModules.raspberry-pi-4
+		./configuration.nix
+		./modules/programs.nix
+		./modules/user.nix
+		./modules/wireless.nix
+	];
     };
   };
 }
