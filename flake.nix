@@ -4,7 +4,7 @@
   inputs = {
     # Pinning nixpkgs here - they dropped support for the
     # old pi hardware config in this version.
-    nixpkgs.url = "github:NixOs/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOs/nixpkgs/nixos-25.05";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
 
@@ -19,6 +19,16 @@
 		./modules/user.nix
 		./modules/wireless.nix
 	];
+    };
+
+    nixosConfigurations."nuc" = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      modules = [
+	./nuc-config.nix
+	./modules/programs.nix
+	./modules/user.nix
+	./modules/wireless.nix
+      ];
     };
   };
 }

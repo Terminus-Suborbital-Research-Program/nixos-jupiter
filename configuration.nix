@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ./hardware-configuration.nix ];
+  imports = [ ./hardware/hardware-jupiter.nix ];
 
   system.stateVersion = "24.11"; # Pinned, DON"T CHANGE
 
