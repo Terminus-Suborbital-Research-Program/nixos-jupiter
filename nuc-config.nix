@@ -16,10 +16,13 @@
   # module
   boot.extraModulePackages = with config.boot.kernelPackages;
     [ rtl88xxau-aircrack ];
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
   networking.hostName = "nuc"; # Define your hostname.
 
   networking.networkmanager.enable = true;
+  networking.networkmanager.wifi.powersave = true;
+  networking.firewall.enable = false;
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
@@ -30,6 +33,7 @@
 
   environment.systemPackages = with pkgs; [
     kea
+    nixos-generators
     vim
     vscode
     kitty
