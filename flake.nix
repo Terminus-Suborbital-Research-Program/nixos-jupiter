@@ -6,7 +6,7 @@
     # old pi hardware config in this version.
     nixpkgs.url = "github:NixOs/nixpkgs/nixos-25.05";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-    guard.url = "github:Terminus-Suborbital-Research-Organization/GUARD";
+    guard.url = "github:Terminus-Suborbital-Research-Program/GUARD";
   };
 
   outputs = { self, nixpkgs, nixos-hardware, guard, ... }@inputs: rec {
