@@ -19,7 +19,6 @@
         ./modules/programs.nix
         ./modules/user.nix
         ./modules/wireless.nix
-        ./modules/radiaread-service.nix
         {
           environment.systemPackages = [ guard.packages.${system}.radiaread ];
 
