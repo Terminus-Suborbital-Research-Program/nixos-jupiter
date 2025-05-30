@@ -7,60 +7,88 @@
     nixpkgs.url = "github:NixOs/nixpkgs/nixos-24.11";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     guard.url = "github:Terminus-Suborbital-Research-Program/GUARD";
+    infratracker.url =
+      "github:Terminus-Suborbital-Research-Program/COTS-Star-Tracker-Amalthea";
   };
 
-  outputs = { self, nixpkgs, nixos-hardware, guard, ... }@inputs: rec {
-    nixosConfigurations."jupiter" = let system = "aarch64-linux";
-    in nixpkgs.lib.nixosSystem {
-      inherit system;
-      modules = [
-        nixos-hardware.nixosModules.raspberry-pi-4
-        ./configuration.nix
-        ./modules/programs.nix
-        ./modules/user.nix
-        ./modules/wireless.nix
-        {
-          environment.systemPackages = [ guard.packages.${system}.radiaread ];
+  outputs =
+    { self, nixpkgs, nixos-hardware, guard, infratracker, ... }@inputs: rec {
+      nixosConfigurations."jupiter" = let system = "aarch64-linux";
+      in nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [
+          nixos-hardware.nixosModules.raspberry-pi-4
+          ./configuration.nix
+          ./modules/programs.nix
+          ./modules/user.nix
+          ./modules/wireless.nix
+          {
+            environment.systemPackages = [
+              guard.packages.${system}.radiaread
+              infratracker.packages.${system}.infratracker
+            ];
 
-          # ensure the data dir exists at boot
-          systemd.tmpfiles.rules = [
-            # format: TYPE PATH MODE OWNER GROUP AGE ARGUMENT
-            "d /home/terminus/rad_data 0755 terminus terminus - -"
-          ];
+            # ensure the data dir exists at boot
+            systemd.tmpfiles.rules = [
+              # format: TYPE PATH MODE OWNER GROUP AGE ARGUMENT
+              "d /home/terminus/rad_data 0755 terminus terminus - -"
+              "d /home/terminus/infratracker_data 0755 terminus terminus - -"
+            ];
 
-          systemd.services.radiaread = {
-            description = "Terminus Radiacode Data Reader";
-            # make sure networking (and tmpfiles) is ready first
-            after =
-              [ "network-online.target" "systemd-tmpfiles-setup.service" ];
-            wants = [ "network-online.target" ];
+            systemd.services.radiaread = {
+              description = "Terminus Radiacode Data Reader";
+              # make sure networking (and tmpfiles) is ready first
+              after =
+                [ "network-online.target" "systemd-tmpfiles-setup.service" ];
 
-            # drop into the right directory and run the binary
-            serviceConfig = {
-              WorkingDirectory = "/home/terminus/rad_data";
-              ExecStart = "${guard.packages.${system}.radiaread}/bin/radiaread /home/terminus/rad_data";
-              Restart = "always";
-              RestartSec = "5s";
-              Group = "dialout";
+              # drop into the right directory and run the binary
+              serviceConfig = {
+                WorkingDirectory = "/home/terminus/rad_data";
+                ExecStart = "${
+                    guard.packages.${system}.radiaread
+                  }/bin/radiaread /home/terminus/rad_data";
+                Restart = "always";
+                RestartSec = "5s";
+                Group = "dialout";
+              };
+
+              # enable the service at boot
+              wantedBy = [ "multi-user.target" ];
             };
 
-            # enable the service at boot
-            wantedBy = [ "multi-user.target" ];
-          };
-        }
-      ];
+            systemd.services.infratracker = {
+              description = "Terminus Infratracker Daemon";
+              after =
+                [ "network-online.target" "systemd-tmpfiles-setup.service" ];
 
-    };
+              serviceConfig = {
+                WorkingDirectory = "/home/terminus/rad_data";
+                ExecStart = "${
+                    infratracker.packages.${system}.infratracker
+                  }/bin/infratracker /home/terminus/infratracker_data";
+                Restart = "always";
+                RestartSec = "5s";
+                Group = "dialout";
+              };
 
-    nixosConfigurations."nuc" = let system = "x86_64-linux";
-    in nixpkgs.lib.nixosSystem {
-      inherit system;
-      modules = [
-        ./nuc-config.nix
-        ./modules/programs.nix
-        ./modules/user.nix
-        { environment.systemPackages = [ guard.packages.${system}.radiaread ]; }
-      ];
+              wantedBy = [ "multi-user.target" ];
+            };
+          }
+        ];
+
+      };
+
+      nixosConfigurations."nuc" = let system = "x86_64-linux";
+      in nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [
+          ./nuc-config.nix
+          ./modules/programs.nix
+          ./modules/user.nix
+          {
+            environment.systemPackages = [ guard.packages.${system}.radiaread ];
+          }
+        ];
+      };
     };
-  };
 }
