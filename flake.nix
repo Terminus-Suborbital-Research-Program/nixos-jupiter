@@ -47,7 +47,7 @@
                     guard.packages.${system}.radiaread
                   }/bin/radiaread /home/terminus/rad_data";
                 Restart = "always";
-                RestartSec = "5s";
+                RestartSec = "20s";
                 Group = "dialout";
               };
 
@@ -63,9 +63,9 @@
                 WorkingDirectory = "/home/terminus/infratracker_data";
                 ExecStart = "${
                     infratracker.packages.${system}.infratracker
-                  }/bin/infratracker /home/terminus/infratracker_data";
+                  }/bin/infratracker .";
                 Restart = "always";
-                RestartSec = "5s";
+                RestartSec = "10s";
                 Group = "dialout";
               };
 
