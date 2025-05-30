@@ -4,7 +4,7 @@
   inputs = {
     # Pinning nixpkgs here - they dropped support for the
     # old pi hardware config in this version.
-    nixpkgs.url = "github:NixOs/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOs/nixpkgs/nixos-24.11";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     guard.url = "github:Terminus-Suborbital-Research-Program/GUARD";
   };
@@ -19,20 +19,20 @@
         ./modules/programs.nix
         ./modules/user.nix
         ./modules/wireless.nix
+        {environment.systemPackages = [ guard.packages.${system}.radiaread ];}
       ];
 
-      configuration = {
-        environment.systemPackages = [ guard.packages.${system}.radiaread ];
-      };
     };
 
     nixosConfigurations."nuc" = let system = "x86_64-linux";
     in nixpkgs.lib.nixosSystem {
       inherit system;
-      modules = [ ./nuc-config.nix ./modules/programs.nix ./modules/user.nix ];
-      configuration = {
-        environment.systemPackages = [ guard.packages.${system}.radiaread ];
-      };
+      modules = [ 
+      ./nuc-config.nix 
+      ./modules/programs.nix 
+      ./modules/user.nix
+        {environment.systemPackages = [ guard.packages.${system}.radiaread ];}
+	];
     };
   };
 }
