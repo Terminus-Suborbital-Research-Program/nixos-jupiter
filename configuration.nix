@@ -46,6 +46,9 @@
 
     # Allied Vision Alvium 1800 U-501m – raw USB node
     SUBSYSTEM=="usb", ATTR{idVendor}=="1ab2", ATTR{idProduct}=="0001", MODE="0660", GROUP="video", SYMLINK+="alvium-%k"
+
+    # /etc/udev/rules.d/99-radiacode.rules
+    SUBSYSTEM=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="f123", MODE="0660", GROUP="dialout", SYMLINK+="radia_code"
   '';
 
   systemd.services.gpioDown = let
