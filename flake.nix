@@ -38,8 +38,7 @@
             systemd.services.radiaread = {
               description = "Terminus Radiacode Data Reader";
               # make sure networking (and tmpfiles) is ready first
-              after =
-                [ "network-online.target" "systemd-tmpfiles-setup.service" ];
+              after = [ "systemd-tmpfiles-setup.service" ];
 
               # drop into the right directory and run the binary
               serviceConfig = {
@@ -58,11 +57,10 @@
 
             systemd.services.infratracker = {
               description = "Terminus Infratracker Daemon";
-              after =
-                [ "network-online.target" "systemd-tmpfiles-setup.service" ];
+              after = [ "systemd-tmpfiles-setup.service" ];
 
               serviceConfig = {
-                WorkingDirectory = "/home/terminus/rad_data";
+                WorkingDirectory = "/home/terminus/infratracker_data";
                 ExecStart = "${
                     infratracker.packages.${system}.infratracker
                   }/bin/infratracker /home/terminus/infratracker_data";
