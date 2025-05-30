@@ -19,7 +19,8 @@
         ./modules/programs.nix
         ./modules/user.nix
         ./modules/wireless.nix
-        {environment.systemPackages = [ guard.packages.${system}.radiaread ];}
+        ./modules/radiaread-service.nix
+        { environment.systemPackages = [ guard.packages.${system}.radiaread ]; }
       ];
 
     };
@@ -27,12 +28,12 @@
     nixosConfigurations."nuc" = let system = "x86_64-linux";
     in nixpkgs.lib.nixosSystem {
       inherit system;
-      modules = [ 
-      ./nuc-config.nix 
-      ./modules/programs.nix 
-      ./modules/user.nix
-        {environment.systemPackages = [ guard.packages.${system}.radiaread ];}
-	];
+      modules = [
+        ./nuc-config.nix
+        ./modules/programs.nix
+        ./modules/user.nix
+        { environment.systemPackages = [ guard.packages.${system}.radiaread ]; }
+      ];
     };
   };
 }
