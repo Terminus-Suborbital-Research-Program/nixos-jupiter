@@ -38,11 +38,10 @@
             # drop into the right directory and run the binary
             serviceConfig = {
               WorkingDirectory = "/home/terminus/rad_data";
-              ExecStart = "${guard.packages.${system}.radiaread}/bin/radiaread";
+              ExecStart = "${guard.packages.${system}.radiaread}/bin/radiaread /home/terminus/rad_data";
               Restart = "always";
               RestartSec = "5s";
-              User = "terminus";
-              Group = "terminus";
+              Group = "dialout";
             };
 
             # enable the service at boot
