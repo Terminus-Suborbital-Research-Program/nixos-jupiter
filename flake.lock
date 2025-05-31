@@ -18,6 +18,42 @@
         "type": "github"
       }
     },
+    "flake-utils_2": {
+      "inputs": {
+        "systems": "systems_2"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_3": {
+      "inputs": {
+        "systems": "systems_3"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "guard": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -34,6 +70,26 @@
       "original": {
         "owner": "Terminus-Suborbital-Research-Program",
         "repo": "GUARD",
+        "type": "github"
+      }
+    },
+    "infratracker": {
+      "inputs": {
+        "flake-utils": "flake-utils_2",
+        "nixpkgs": "nixpkgs_2",
+        "vimbax": "vimbax"
+      },
+      "locked": {
+        "lastModified": 1748646028,
+        "narHash": "sha256-tTLnB4JsxMX6mJtp8/3SvDSqW6chmlMkxYGqnbNNKAs=",
+        "owner": "Terminus-Suborbital-Research-Program",
+        "repo": "COTS-Star-Tracker-Amalthea",
+        "rev": "3394887a1af9da2c5eb730886de082a57322b966",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Terminus-Suborbital-Research-Program",
+        "repo": "COTS-Star-Tracker-Amalthea",
         "type": "github"
       }
     },
@@ -71,6 +127,38 @@
     },
     "nixpkgs_2": {
       "locked": {
+        "lastModified": 1747744144,
+        "narHash": "sha256-W7lqHp0qZiENCDwUZ5EX/lNhxjMdNapFnbErcbnP11Q=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "2795c506fe8fb7b03c36ccb51f75b6df0ab2553f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
+        "lastModified": 1747767685,
+        "narHash": "sha256-vZAxZWZI6M6qoJRcCZenYhHZqNumh0kqRR5UVATESqY=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "d4512b12dbad22bfc3a6163a5839cb0205da1104",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "release-25.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_4": {
+      "locked": {
         "lastModified": 1748421225,
         "narHash": "sha256-XXILOc80tvlvEQgYpYFnze8MkQQmp3eQxFbTzb3m/R0=",
         "owner": "NixOs",
@@ -88,8 +176,9 @@
     "root": {
       "inputs": {
         "guard": "guard",
+        "infratracker": "infratracker",
         "nixos-hardware": "nixos-hardware",
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": "nixpkgs_4"
       }
     },
     "systems": {
@@ -104,6 +193,55 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "systems_2": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "systems_3": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "vimbax": {
+      "inputs": {
+        "flake-utils": "flake-utils_3",
+        "nixpkgs": "nixpkgs_3"
+      },
+      "locked": {
+        "lastModified": 1747872049,
+        "narHash": "sha256-5dZLlEzZ8M8A3t5BwwKG1BKVQBpIckejyGT4+kuoSfo=",
+        "owner": "Terminus-Suborbital-Research-Program",
+        "repo": "vimba-x",
+        "rev": "61f8dd96313a67b911f748da09ea74221d1e5c02",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Terminus-Suborbital-Research-Program",
+        "repo": "vimba-x",
         "type": "github"
       }
     }
