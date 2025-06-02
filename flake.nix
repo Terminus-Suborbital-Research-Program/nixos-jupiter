@@ -9,11 +9,14 @@
     guard.url = "github:Terminus-Suborbital-Research-Program/GUARD";
     infratracker.url =
       "github:Terminus-Suborbital-Research-Program/COTS-Star-Tracker-Amalthea";
+    jupiter.url = "github:Terminus-Suborbital-Research-Program/AMALTHEA";
   };
 
-  outputs =
-    { self, nixpkgs, nixos-hardware, guard, infratracker, ... }@inputs: rec {
-      nixosConfigurations."jupiter" = let system = "aarch64-linux";
+  outputs = { self, nixpkgs, nixos-hardware, guard, infratracker, jupiter, ...
+    }@inputs: rec {
+      nixosConfigurations."jupiter" = let
+        system = "aarch64-linux";
+        jupiter-pkg = jupiter.packages.${system}.jupiter;
       in nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
@@ -26,6 +29,7 @@
             environment.systemPackages = [
               guard.packages.${system}.radiaread
               infratracker.packages.${system}.infratracker
+              jupiter-pkg
             ];
 
             # ensure the data dir exists at boot
