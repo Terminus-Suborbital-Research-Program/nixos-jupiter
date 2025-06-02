@@ -14,7 +14,9 @@
 
   outputs = { self, nixpkgs, nixos-hardware, guard, infratracker, jupiter, ...
     }@inputs: rec {
-      nixosConfigurations."jupiter" = let system = "aarch64-linux";
+      nixosConfigurations."jupiter" = let
+        system = "aarch64-linux";
+        jupiter-pkg = jupiter.packages.${system}.jupiter-fsw;
       in nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
@@ -27,7 +29,7 @@
             environment.systemPackages = [
               guard.packages.${system}.radiaread
               infratracker.packages.${system}.infratracker
-              jupiter.packages.${system}.infratracker
+              jupiter-pkg
             ];
 
             # ensure the data dir exists at boot
