@@ -12,8 +12,8 @@
     ffmpeg
     direnv
     libgpiod
-    mjpgeg-streamer
     uvcdynctrl
+    mjpg-streamer
     wget
     kitty
     git
