@@ -25,7 +25,6 @@
         ./modules/user.nix
         ./modules/wireless.nix
         ./modules/lsm6dt.nix
-        ./modules/jupiter-service.nix
         {
           environment.systemPackages = [
             guard.packages.${system}.radiaread
@@ -58,6 +57,20 @@
 
             # enable the service at boot
             wantedBy = [ "multi-user.target" ];
+          };
+
+          systemd.services.jupiter = {
+            description = "JUPITER Flight software";
+            after = [ "systemd-tmpfiles-setup.service" ];
+
+            serviceConfig = {
+              WorkingDirectory = "/home/terminus/";
+              ExecStart =
+                "${jupiter.packages.${system}.jupiter-fsw}/bin/jupiter-fsw";
+              Restart = "always";
+              RestartSec = "2s";
+              User = "terminus";
+            };
           };
 
           systemd.services.infratracker = {
