@@ -25,6 +25,7 @@
           ./modules/programs.nix
           ./modules/user.nix
           ./modules/wireless.nix
+          ./modules/lsm6dt.nix
           {
             environment.systemPackages = [
               guard.packages.${system}.radiaread
