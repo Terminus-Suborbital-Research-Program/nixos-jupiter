@@ -1,8 +1,8 @@
-{ config, guard, ... }:
+{ config, jupiter, ... }:
 
 let
   system = config.system;
-  RR = guard.packages.${system}.radiaread;
+  jupiter-fsw = jupiter.packages.${system}.jupiter-fsw;
 in {
   # ensure the data dir exists at boot
   systemd.tmpfiles.rules = [
@@ -18,10 +18,10 @@ in {
 
     # drop into the right directory and run the binary
     serviceConfig = {
-      WorkingDirectory = "/home/terminus/rad_data";
-      ExecStart = "${RR}/bin/radiaread";
+      WorkingDirectory = "/home/terminus/";
+      ExecStart = "${jupiter-fsw}/bin/jupiter-fsw";
       Restart = "always";
-      RestartSec = "5s";
+      RestartSec = "1s";
       User = "terminus";
       Group = "terminus";
     };

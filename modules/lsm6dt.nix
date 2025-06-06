@@ -1,4 +1,4 @@
-{ config, lib, pkgs, inputs, ... }: {
+{ pkgs, ... }: {
   boot.kernelModules = [ "st_lsm6dsx_i2c" ]; # IIO ST driver
 
   # Device tree overlay
@@ -22,12 +22,6 @@
             lsm6dsl@6a {
               compatible       = "st,lsm6dsl";
               reg              = <0x6a>;
-              st,drdy-int-pin  = <1>;        /* INT1; optional */
-
-              /* If you really wired INT1 to GPIO-23, uncomment: */
-              /*  #include <dt-bindings/interrupt-controller/irq.h>
-                  interrupt-parent = <&gpio>;
-                  interrupts       = <23 IRQ_TYPE_EDGE_RISING>; */
             };
           };
         };
