@@ -13,6 +13,7 @@
     direnv
     libgpiod
     uvcdynctrl
+    mjpg-streamer
     wget
     kitty
     git
