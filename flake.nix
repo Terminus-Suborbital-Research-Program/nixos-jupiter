@@ -57,7 +57,7 @@
           systemd.services.jupiter = {
             description = "JUPITER Flight software";
             after = [ "systemd-tmpfiles-setup.service" ];
-            path = [ jupiter-pkg pkgs.libgpiod ];
+            path = [ jupiter-pkg pkgs.libgpiod pkgs.ffmpeg ];
 
             serviceConfig = {
               WorkingDirectory = "/home/terminus/";
