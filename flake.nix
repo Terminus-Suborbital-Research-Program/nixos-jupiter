@@ -7,12 +7,10 @@
     nixpkgs.url = "github:NixOs/nixpkgs/nixos-24.11";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     guard.url = "github:Terminus-Suborbital-Research-Program/GUARD";
-    infratracker.url =
-      "github:Terminus-Suborbital-Research-Program/COTS-Star-Tracker-Amalthea";
     jupiter.url = "github:Terminus-Suborbital-Research-Program/AMALTHEA";
   };
 
-  outputs = { nixpkgs, nixos-hardware, guard, infratracker, jupiter, ... }: {
+  outputs = { nixpkgs, nixos-hardware, guard, jupiter, ... }: {
     nixosConfigurations."jupiter" = let
       system = "aarch64-linux";
       jupiter-pkg = jupiter.packages.${system}.jupiter-fsw;
@@ -27,11 +25,8 @@
         ./modules/wireless.nix
         ./modules/lsm6dt.nix
         {
-          environment.systemPackages = [
-            guard.packages.${system}.radiaread
-            infratracker.packages.${system}.infratracker
-            jupiter-pkg
-          ];
+          environment.systemPackages =
+            [ guard.packages.${system}.radiaread jupiter-pkg ];
 
           # ensure the data dir exists at boot
           systemd.tmpfiles.rules = [
@@ -74,23 +69,6 @@
               RestartSec = "2s";
               User = "terminus";
             };
-          };
-
-          systemd.services.infratracker = {
-            description = "Terminus Infratracker Daemon";
-            after = [ "systemd-tmpfiles-setup.service" ];
-
-            serviceConfig = {
-              WorkingDirectory = "/home/terminus/infratracker_data";
-              ExecStart = "${
-                  infratracker.packages.${system}.infratracker
-                }/bin/infratracker .";
-              Restart = "always";
-              RestartSec = "10s";
-              Group = "dialout";
-            };
-
-            wantedBy = [ "multi-user.target" ];
           };
         }
       ];
