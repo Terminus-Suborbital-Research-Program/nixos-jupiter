@@ -14,6 +14,7 @@
     nixosConfigurations."jupiter" = let
       system = "aarch64-linux";
       jupiter-pkg = jupiter.packages.${system}.jupiter-fsw;
+      radiaread = guard.packages.${system}.radiaread;
       pkgs = import nixpkgs { inherit system; };
     in nixpkgs.lib.nixosSystem {
       inherit system;
@@ -25,8 +26,7 @@
         ./modules/wireless.nix
         ./modules/lsm6dt.nix
         {
-          environment.systemPackages =
-            [ guard.packages.${system}.radiaread jupiter-pkg ];
+          environment.systemPackages = [ radiaread jupiter-pkg ];
 
           # ensure the data dir exists at boot
           systemd.tmpfiles.rules = [
@@ -38,13 +38,12 @@
             description = "Terminus Radiacode Data Reader";
             # make sure networking (and tmpfiles) is ready first
             after = [ "systemd-tmpfiles-setup.service" ];
+            path = [ radiaread ];
 
             # drop into the right directory and run the binary
             serviceConfig = {
               WorkingDirectory = "/home/terminus/rad_data";
-              ExecStart = "${
-                  guard.packages.${system}.radiaread
-                }/bin/radiaread /home/terminus/rad_data";
+              ExecStart = "${radiaread}/bin/radiaread /home/terminus/rad_data";
               Restart = "always";
               RestartSec = "20s";
               Group = "dialout";
