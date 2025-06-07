@@ -16,6 +16,7 @@
     nixosConfigurations."jupiter" = let
       system = "aarch64-linux";
       jupiter-pkg = jupiter.packages.${system}.jupiter-fsw;
+      pkgs = import nixpkgs { inherit system; };
     in nixpkgs.lib.nixosSystem {
       inherit system;
       modules = [
@@ -63,7 +64,7 @@
             description = "JUPITER Flight software";
             after = [ "systemd-tmpfiles-setup.service" ];
 
-            path = [ jupiter-pkg nixpkgs.packages.${system}.libgpiod ];
+            path = [ jupiter-pkg pkgs.libgpiod ];
 
             serviceConfig = {
               WorkingDirectory = "/home/terminus/";
