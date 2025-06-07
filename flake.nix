@@ -72,30 +72,21 @@
               User = "terminus";
             };
           };
-
-    };
-
-    nixosConfigurations."nuc" = let system = "x86_64-linux";
-    in nixpkgs.lib.nixosSystem {
-      inherit system;
-      modules = [
-        ./nuc-config.nix
-        ./modules/programs.nix
-        ./modules/user.nix
-        { environment.systemPackages = [ guard.packages.${system}.radiaread ]; }
+        }
       ];
 
-    };
-
-    nixosConfigurations."nuc" = let system = "x86_64-linux";
-    in nixpkgs.lib.nixosSystem {
-      inherit system;
-      modules = [
-        ./nuc-config.nix
-        ./modules/programs.nix
-        ./modules/user.nix
-        { environment.systemPackages = [ guard.packages.${system}.radiaread ]; }
-      ];
+      nixosConfigurations."nuc" = let system = "x86_64-linux";
+      in nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [
+          ./nuc-config.nix
+          ./modules/programs.nix
+          ./modules/user.nix
+          {
+            environment.systemPackages = [ guard.packages.${system}.radiaread ];
+          }
+        ];
+      };
     };
   };
 }
