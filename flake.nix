@@ -63,7 +63,7 @@
             description = "JUPITER Flight software";
             after = [ "systemd-tmpfiles-setup.service" ];
 
-            path = [ jupiter-pkg ];
+            path = [ jupiter-pkg nixpkgs.packages.${system}.libgpiod ];
 
             serviceConfig = {
               WorkingDirectory = "/home/terminus/";
