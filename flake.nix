@@ -63,6 +63,8 @@
             description = "JUPITER Flight software";
             after = [ "systemd-tmpfiles-setup.service" ];
 
+            path = [ jupiter-pkg ];
+
             serviceConfig = {
               WorkingDirectory = "/home/terminus/";
               ExecStart =
