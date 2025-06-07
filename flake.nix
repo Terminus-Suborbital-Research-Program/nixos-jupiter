@@ -7,6 +7,8 @@
     nixpkgs.url = "github:NixOs/nixpkgs/nixos-24.11";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     guard.url = "github:Terminus-Suborbital-Research-Program/GUARD";
+    infratracker.url =
+      "github:Terminus-Suborbital-Research-Program/COTS-Star-Tracker-Amalthea";
     jupiter.url = "github:Terminus-Suborbital-Research-Program/AMALTHEA";
   };
 
@@ -70,7 +72,17 @@
               User = "terminus";
             };
           };
-        }
+
+    };
+
+    nixosConfigurations."nuc" = let system = "x86_64-linux";
+    in nixpkgs.lib.nixosSystem {
+      inherit system;
+      modules = [
+        ./nuc-config.nix
+        ./modules/programs.nix
+        ./modules/user.nix
+        { environment.systemPackages = [ guard.packages.${system}.radiaread ]; }
       ];
 
     };
