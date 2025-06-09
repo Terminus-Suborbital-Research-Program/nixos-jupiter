@@ -57,7 +57,7 @@
   networking.firewall.enable = true;
   # Keep the firewall enabled for safety (using iptables by default).
 
-  networking.firewall.trustedInterfaces = [ "endp0" ];
+  networking.firewall.trustedInterfaces = [ "end0" ];
   # Trust the Ethernet LAN interface: accept all traffic from the downstream side:contentReference[oaicite:8]{index=8}.
   # This allows DHCP and any LAN-originating connections through without complex rules.
   # (The WiFi interface remains subject to the default firewall, protecting the host from external traffic.)
