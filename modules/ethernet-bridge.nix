@@ -19,6 +19,13 @@
     matchConfig.Name = "wlan0"; # Match the WiFi interface by name.
     networkConfig.DHCP =
       "ipv4"; # Obtain IP configuration via DHCP from the WiFi network.
+    networkConfig.IPMasquerade =
+      "ipv4"; # Masquerade (NAT) outgoing traffic on wlan0 for downstream clients:contentReference[oaicite:2]{index=2}.
+    # IPMasquerade will SNAT traffic leaving wlan0, making it appear as if it originates from this host, 
+    # which enables internet access for the LAN clients. This implicitly enables IPv4 forwarding as well:contentReference[oaicite:3]{index=3}.
+    #
+    # (No static addresses on wlan0; it’s a DHCP client on the upstream WiFi. 
+    # IPMasquerade is a simple one-line NAT setup by networkd, avoiding manual iptables rules:contentReference[oaicite:4]{index=4}.)
   };
 
   #### Configure Ethernet interface (downlink to LAN) ####
@@ -48,7 +55,6 @@
   #### Minimal firewall rules for NAT and LAN ####
 
   networking.firewall.enable = true;
-  networking.firewall.masquerade = true; # turn on NAT
   # Keep the firewall enabled for safety (using iptables by default).
 
   networking.firewall.trustedInterfaces = [ "end0" ];
