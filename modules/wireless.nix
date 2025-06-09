@@ -6,7 +6,5 @@
   };
 
   # Disable bluetooth
-  boot.blackListedKernelModules =
-    [ "bluetooth" "btusb" "btbcm" "btrtl" "btintel" "hci_uart" ];
   hardware.bluetooth.enable = false;
 }
