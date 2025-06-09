@@ -49,8 +49,6 @@
 
   networking.firewall.enable = true;
   networking.firewall.masquerade = true; # turn on NAT
-  networking.firewall.externalInterfaces =
-    [ "wlan0" ]; # NAT traffic going out via wlan0
   # Keep the firewall enabled for safety (using iptables by default).
 
   networking.firewall.trustedInterfaces = [ "end0" ];
