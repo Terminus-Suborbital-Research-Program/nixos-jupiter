@@ -20,7 +20,7 @@
     networkConfig.DHCP =
       "ipv4"; # Obtain IP configuration via DHCP from the WiFi network.
     networkConfig.IPMasquerade =
-      true; # Masquerade (NAT) outgoing traffic on wlan0 for downstream clients:contentReference[oaicite:2]{index=2}.
+      "ipv4"; # Masquerade (NAT) outgoing traffic on wlan0 for downstream clients:contentReference[oaicite:2]{index=2}.
     # IPMasquerade will SNAT traffic leaving wlan0, making it appear as if it originates from this host, 
     # which enables internet access for the LAN clients. This implicitly enables IPv4 forwarding as well:contentReference[oaicite:3]{index=3}.
     #
@@ -57,7 +57,7 @@
   networking.firewall.enable = true;
   # Keep the firewall enabled for safety (using iptables by default).
 
-  networking.firewall.trustedInterfaces = [ "end0" ];
+  networking.firewall.trustedInterfaces = [ "endp0" ];
   # Trust the Ethernet LAN interface: accept all traffic from the downstream side:contentReference[oaicite:8]{index=8}.
   # This allows DHCP and any LAN-originating connections through without complex rules.
   # (The WiFi interface remains subject to the default firewall, protecting the host from external traffic.)
