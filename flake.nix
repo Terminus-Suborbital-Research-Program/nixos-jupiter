@@ -8,9 +8,24 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     guard.url = "github:Terminus-Suborbital-Research-Program/GUARD";
     jupiter.url = "github:Terminus-Suborbital-Research-Program/AMALTHEA";
+    probe-rs-rules.url = "github:jneem/probe-rs-rules";
   };
 
-  outputs = { nixpkgs, nixos-hardware, guard, jupiter, ... }: {
+  outputs = { nixpkgs, nixos-hardware, guard, jupiter, probe-rs-rules, ... }: {
+    nixosConfigurations."dev-pi" = let system = "aarch64-linux";
+    in nixpkgs.lib.nixosSystem {
+      inherit system;
+      modules = [
+        nixos-hardware.nixosModules.raspberry-pi-4
+        ./configuration.nix
+        ./modules/programs.nix
+        ./modules/user.nix
+        ./modules/wireless.nix
+        ./modules/probe-rs.nix
+        probe-rs-rules.nixosModules.${system}.default
+      ];
+    };
+
     nixosConfigurations."jupiter" = let
       system = "aarch64-linux";
       jupiter-pkg = jupiter.packages.${system}.jupiter-fsw;
