@@ -1,57 +1,90 @@
-{ system, config, pkgs, ... }: {
-  boot.kernel.sysctl = {
-    "net.ipv4.conf.all.forwarding" = true;
+{ lib, config, pkgs, ... }:
+
+let cfg = config.services.router;
+in {
+  options.services.router = {
+    enable =
+      lib.mkEnableOption "Enable simple router/NAT between Wi-Fi and Ethernet";
+
+    wifiInterface = lib.mkOption {
+      type = lib.types.str;
+      default = "wlan0";
+      description = "Upstream (internet-connected) wireless interface";
+    };
+
+    lanInterface = lib.mkOption {
+      type = lib.types.str;
+      default = "end0";
+      description = "Downstream LAN Ethernet interface";
+    };
+
+    lanAddress = lib.mkOption {
+      type = lib.types.str;
+      default = "192.168.4.1";
+      description = "Static IPv4 address for the LAN interface";
+    };
+
+    lanPrefixLength = lib.mkOption {
+      type = lib.types.int;
+      default = 24;
+      description = "Subnet mask length for the LAN network";
+    };
+
+    dhcpRangeStart = lib.mkOption {
+      type = lib.types.str;
+      default = "192.168.4.10";
+      description = "First address in the DHCP pool";
+    };
+
+    dhcpRangeEnd = lib.mkOption {
+      type = lib.types.str;
+      default = "192.168.4.100";
+      description = "Last address in the DHCP pool";
+    };
+
+    dnsServers = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ "1.1.1.1" "8.8.8.8" ];
+      description = "DNS servers handed out via DHCP";
+    };
   };
-  networking.interfaces."end0" = {
-  # useDHCP = false;
-  #  ipv4.addresses = [{
-  #    "address" = "9.9.0.1";
-  #    prefixLength = 24;
-  #  }];
+
+  config = lib.mkIf cfg.enable {
+    # Bring up wlan0 via DHCP
+    networking.interfaces.${cfg.wifiInterface}.useDHCP = true;
+
+    # Static IP on LAN port
+    networking.interfaces.${cfg.lanInterface}.ipv4.addresses = [{
+      address = cfg.lanAddress;
+      prefixLength = cfg.lanPrefixLength;
+    }];
+
+    # Enable IPv4 forwarding
+    boot.kernel.sysctl."net.ipv4.ip_forward" = true;
+
+    # NAT/Masquerade (external = wifi, internal = lan)
+    networking.nat.enable = true;
+    networking.nat.externalInterface = cfg.wifiInterface;
+    networking.nat.internalInterfaces =
+      [ cfg.lanInterface ]; # :contentReference[oaicite:0]{index=0}
+
+    # DHCP server on LAN via systemd-networkd
+    systemd.network.enable = true;
+    systemd.network.networks."10-${cfg.lanInterface}" = {
+      matchConfig = { Name = cfg.lanInterface; };
+      networkConfig = {
+        Address = "${cfg.lanAddress}/${cfg.lanPrefixLength}";
+        DHCPServer = "yes";
+      };
+      dhcpServerConfig = {
+        # dhcp-range: start end
+        Range = "${cfg.dhcpRangeStart} ${cfg.dhcpRangeEnd}";
+        # space-separated DNS servers
+        DNS = lib.concatStringsSep " " cfg.dnsServers;
+      };
+    }; # :contentReference[oaicite:1]{index=1}
+
+    # Basic firewall (allows established + related by default)
+    networking.firewall.enable = true;
   };
-  networking.firewall.extraCommands = ''
-    INTERNET=wlp0s20u2
-    LAN=eno1
-
-    iptables -t nat -A POSTROUTING -o $LAN -j MASQUERADE
-    iptables -A FORWARD -i $LAN -o $INTERNET -m state --state RELATED,ESTABLISHED -j ACCEPT
-    iptables -A FORWARD -i $INTERNET -o $LAN -j ACCEPT
-  '';
-
-  networking.firewall.allowedTCPPorts = [ 53 67 ];
-  networking.firewall.allowedUDPPorts = [ 53 67 ];
-
-
-  ## Run DHCP server on the downstream interface
-  #services.kea.dhcp4 = {
-  #  enable = true;
-  #  settings = {
-  #    interfaces-config = {
-  #      interfaces = [
-  #        "eno1"
-  #      ];
-  #    };
-  #    lease-database = {
-  #      name = "/var/lib/kea/dhcp4.leases";
-  #      persist = true;
-  #      type = "memfile";
-  #    };
-  #    rebind-timer = 2000;
-  #    renew-timer = 1000;
-  #    subnet4 = [
-  #      {
-  #        id = 1;
-  #        pools = [{
-  #          pool = "9.0.0.2 - 9.0.0.255";
-  #        }];
-  #        subnet = "9.0.0.1/24";
-  #      }
-  #    ];
-  #    valid-lifetime = 4000;
-  #    option-data = [{
-  #      name = "routers";
-  #      data = "9.0.0.1";
-  #    }];
-  #  };
-  #};
 }

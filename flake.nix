@@ -22,6 +22,7 @@
         ./modules/user.nix
         ./modules/wireless.nix
         ./modules/probe-rs.nix
+        ./modules/ethernet-bridge.nix
         probe-rs-rules.nixosModules.${system}.default
       ];
     };
