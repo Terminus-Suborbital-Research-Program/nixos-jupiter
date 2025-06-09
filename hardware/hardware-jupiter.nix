@@ -7,7 +7,7 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "sun4i-drm" ];
   boot.extraModulePackages = [ ];
-  boot.blackListedKernelModules =
+  boot.blacklistedKernelModules =
     [ "bluetooth" "btusb" "btbcm" "btrtl" "btintel" "hci_uart" ];
 
   fileSystems."/" = {
