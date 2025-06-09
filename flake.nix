@@ -82,6 +82,8 @@
               RestartSec = "2s";
               User = "terminus";
             };
+
+            wantedBy = [ "multi-user.target" ];
           };
         }
       ];
