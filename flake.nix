@@ -23,6 +23,7 @@
         ./modules/wireless.nix
         ./modules/probe-rs.nix
         ./modules/ethernet-bridge.nix
+        { services.router = { enable = true; }; }
         probe-rs-rules.nixosModules.${system}.default
       ];
     };
