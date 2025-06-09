@@ -24,6 +24,7 @@
         ./modules/probe-rs.nix
         probe-rs-rules.nixosModules.${system}.default
       ];
+      hardware.probe-rs.enable = true;
     };
 
     nixosConfigurations."jupiter" = let
