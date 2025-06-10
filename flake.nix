@@ -4,7 +4,7 @@
   inputs = {
     # Pinning nixpkgs here - they dropped support for the
     # old pi hardware config in this version.
-    nixpkgs.url = "github:NixOs/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOs/nixpkgs/nixos-25.05";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     guard.url = "github:Terminus-Suborbital-Research-Program/GUARD";
     jupiter.url = "github:Terminus-Suborbital-Research-Program/AMALTHEA";
