@@ -33,12 +33,8 @@ in {
     }];
   };
 
-  networking.sysctl."net.ipv4.ip_forward" = 1;
+  boot.kernel.sysctl = { "net.ipv4.ip_forward" = 1; };
   #### Configure WiFi interface (uplink) ####
-
-  # Define networkd settings for the WiFi interface (e.g., wlan0) which is the uplink to the internet.
-
-  boot.kernel.sysctl."net.ipv4.ip_forward" = lib.mkDefault true;
 
   networking.firewall.enable = true;
 
