@@ -1,47 +1,40 @@
-{ lib, config, pkgs, ... }:
-let
-  # Original values
-  ethPiAddress = "192.168.10.1"; # Pi’s address on eth0
-  ethPrefix = 24;
-
-  # Compute “192.168.10” from “192.168.10.1”
-  parts = builtins.splitString "." ethPiAddress; # [ "192" "168" "10" "1" ]
-  ethSubnetBase =
-    builtins.concatStringsSep "." (builtins.take 3 parts); # "192.168.10
-in {
-  #### Use systemd-networkd and wpa_supplicant for networking (no NetworkManager) ####
-
-  networking.networkmanager.enable = true;
-  networking.interfaces.eth0.ipv4 = {
-    dhcp = false;
-    addresses = [{
-      address = ethPiAddress;
-      prefixLength = ethPrefix;
+{ lib, config, pkgs, ... }: { # Set a static IP on the "downstream" interface
+  networking.interfaces."end0" = {
+    useDHCP = false;
+    ipv4.addresses = [{
+      address = "10.0.0.1";
+      prefixLength = 24;
     }];
   };
+  networking.firewall.extraCommands = ''
+    # Set up SNAT on packets going from downstream to the wider internet
+    iptables -t nat -A POSTROUTING -o wlan0 -j MASQUERADE
 
-  networking.wireless.enable = true;
-  services.dnsmasq.enable = true;
-  services.dnsmasq.interfaces = [ "end0" ];
-  services.dnsmasq.extraConfig = ''
-    # give clients .10–.100, 12-hour leases
-    dhcp-range=${ethSubnetBase}.10,${ethSubnetBase}.100,255.255.255.0,12h
-    dhcp-option=option:router,${ethPiAddress}
-    dhcp-option=option:dns-server,8.8.8.8,8.8.4.4
-  ''; # (Ensure to configure your WiFi network in networking.wireless.networks or via wpa_supplicant config.)
-
-  networking.interfaces.end0.ipv4 = {
-    dhcp = false;
-    addresses = [{
-      address = ethPiAddress;
-      prefixLength = ethPrefix;
-    }];
+    # Accept all connections from downstream. May not be necessary
+    iptables -A INPUT -i enp2s0 -j ACCEPT
+  '';
+  # Run a DHCP server on the downstream interface
+  services.kea.dhcp4 = {
+    enable = true;
+    settings = {
+      interfaces-config = { interfaces = [ "end0" ]; };
+      lease-database = {
+        name = "/var/lib/kea/dhcp4.leases";
+        persist = true;
+        type = "memfile";
+      };
+      rebind-timer = 2000;
+      renew-timer = 1000;
+      subnet4 = [{
+        id = 1;
+        pools = [{ pool = "10.0.0.2 - 10.0.0.255"; }];
+        subnet = "10.0.0.1/24";
+      }];
+      valid-lifetime = 4000;
+      option-data = [{
+        name = "routers";
+        data = "10.0.0.1";
+      }];
+    };
   };
-
-  boot.kernel.sysctl = { "net.ipv4.ip_forward" = 1; };
-  #### Configure WiFi interface (uplink) ####
-
-  networking.firewall.enable = true;
-
-  networking.firewall.trustedInterfaces = [ "end0" ];
 }
