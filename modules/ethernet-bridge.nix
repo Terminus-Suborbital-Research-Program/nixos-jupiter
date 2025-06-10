@@ -12,10 +12,15 @@ in {
   #### Use systemd-networkd and wpa_supplicant for networking (no NetworkManager) ####
 
   networking.networkmanager.enable = true;
-  # Disable NetworkManager to avoid conflicts, since we use wpa_supplicant + networkd.
+  networking.interfaces.eth0.ipv4 = {
+    dhcp = false;
+    addresses = [{
+      address = ethPiAddress;
+      prefixLength = ethPrefix;
+    }];
+  };
 
   networking.wireless.enable = true;
-  # Enable wpa_supplicant for WiFi. 
   services.dnsmasq.enable = true;
   services.dnsmasq.interfaces = [ "end0" ];
   services.dnsmasq.extraConfig = ''
